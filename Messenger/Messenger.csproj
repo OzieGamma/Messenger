@@ -86,7 +86,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Who.cs" />
+    <Compile Include="My.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

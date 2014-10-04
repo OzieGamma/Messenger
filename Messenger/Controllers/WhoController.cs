@@ -23,7 +23,7 @@ namespace Messenger.Controllers
     {
         public string Get()
         {
-            return Who.AmI;
+            return My.Name;
         }
     }
 }

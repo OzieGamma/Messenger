@@ -102,7 +102,7 @@ namespace Messenger.Console
 
         private static void SendRequest(TransferRequest request)
         {
-            new TransferClient("LOCALHOST -1").Transfer(request);
+            new TransferClient("LOCALHOST -1", null, null).Transfer(request);
         }
     }
 }

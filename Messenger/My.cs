@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Who.cs" company="Oswald Maskens">
+// <copyright file="My.cs" company="Oswald Maskens">
 //   Copyright 2014 Oswald Maskens
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -19,13 +19,29 @@ namespace Messenger
 {
     using System.Configuration;
 
-    internal static class Who
+    internal static class My
     {
-        internal static string AmI
+        internal static string Name
         {
             get
             {
                 return ConfigurationManager.AppSettings["UID"];
+            }
+        }
+
+        internal static string SendGridUsername
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["Sendgrid_username"];
+            }
+        }
+
+        internal static string SendGridPassword
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["Sendgrid_pwd"];
             }
         }
     }
