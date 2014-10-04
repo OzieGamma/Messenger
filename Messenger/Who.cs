@@ -15,7 +15,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Messenger.Models
+namespace Messenger
 {
     using System.Configuration;
 

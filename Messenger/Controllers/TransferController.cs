@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="WebApiConfig.cs" company="Oswald Maskens">
+// <copyright file="TransferController.cs" company="Oswald Maskens">
 //   Copyright 2014 Oswald Maskens
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -15,20 +15,17 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Messenger
+namespace Messenger.Controllers
 {
     using System.Web.Http;
 
-    public static class WebApiConfig
+    using Messenger.Models;
+
+    public class TransferController : ApiController
     {
-        public static void Register(HttpConfiguration config)
+        // POST: Transfer
+        public void Post([FromBody] TransferRequest value)
         {
-            // Web API configuration and services
-
-            // Web API routes
-            config.MapHttpAttributeRoutes();
-
-            config.Routes.MapHttpRoute("api", "{controller}", defaults: new { controller = "who" });
         }
     }
 }

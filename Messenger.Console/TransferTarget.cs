@@ -1,5 +1,5 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="WebApiConfig.cs" company="Oswald Maskens">
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="TransferTarget.cs" company="Oswald Maskens">
 //   Copyright 2014 Oswald Maskens
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -15,20 +15,12 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Messenger
+namespace Messenger.Console
 {
-    using System.Web.Http;
-
-    public static class WebApiConfig
+    internal class TransferTarget
     {
-        public static void Register(HttpConfiguration config)
-        {
-            // Web API configuration and services
+        public string UID { get; set; }
 
-            // Web API routes
-            config.MapHttpAttributeRoutes();
-
-            config.Routes.MapHttpRoute("api", "{controller}", defaults: new { controller = "who" });
-        }
+        public string To { get; set; }
     }
 }
