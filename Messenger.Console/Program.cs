@@ -20,7 +20,6 @@ namespace Messenger.Console
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
 
     using Messenger.Models;
 
@@ -30,90 +29,80 @@ namespace Messenger.Console
     {
         private static void Main(string[] args)
         {
-            if (args.Length != 1 || !File.Exists(args[0]))
+            if (args.Length == 1)
             {
-                throw new ArgumentException("Please provide 1 arg, a file name");
-            }
-
-            var ompData = File.ReadAllLines(args[0]);
-            var meta = ompData[0].Split();
-            var message = new string(ompData.Skip(1).Aggregate((acc, text) => acc + '\n' + text).ToArray());
-
-            var req = JsonConvert.SerializeObject(MakeRequest(meta, message));
-
-            Console.WriteLine("Request build: ");
-            Console.WriteLine(req);
-            File.WriteAllText("out.json", req);
-
-
-            Console.Write("Send to: ");
-            var address = Console.ReadLine();
-        }
-
-        private static TransferRequest MakeRequest(IList<string> meta, string message)
-        {
-            var options = new TransferRequestOptions { Trace = meta[0].ToUpperInvariant() == "TRACE" };
-            var algorithm = meta[1];
-            var times = int.Parse(meta[2]);
-            var endProtocol = meta[3].Split(':')[0];
-            var endTarget = new TransferTarget { To = meta[3].Split(':')[1] };
-
-            var lastRequest = new TransferRequest
-                              {
-                                  Options = options, 
-                                  Payload = Encrypt(message, algorithm, endTarget), 
-                                  To = endTarget.To, 
-                                  Algorithm = algorithm, 
-                                  Protocol = ParseProtocol(endProtocol)
-                              };
-
-            return BundleRequest(options, algorithm, times, lastRequest);
-        }
-
-        private static string Encrypt(string message, string algorithm, TransferTarget target)
-        {
-            switch (algorithm)
-            {
-                case "clear_text":
-                    return message;
-                default:
-                    throw new NotImplementedException("Don't know algorithm: " + algorithm);
-            }
-        }
-
-        private static TransferRequest BundleRequest(TransferRequestOptions options, string algorithm, int times, TransferRequest bundledRequest)
-        {
-            while (true)
-            {
-                if (times == 0)
+                if (!File.Exists(args[0]))
                 {
-                    return bundledRequest;
+                    throw new ArgumentException("If an arg is provided it should be a file name");
                 }
 
-                var payload = JsonConvert.SerializeObject(bundledRequest);
-                var target = RandomTarget();
+                var genReq = JsonConvert.DeserializeObject<OmpRequestGenerationParameters>(File.ReadAllText(args[0]));
+                var req = GenerateRequest(genReq);
 
-                var message = new TransferRequest { Options = options, Payload = Encrypt(payload, algorithm, target), To = target.To, Algorithm = algorithm, Protocol = TransferRequestProtocol.Omp };
+                File.WriteAllText("req.json", JsonConvert.SerializeObject(req));
 
-                times = times - 1;
-                bundledRequest = message;
+                Console.Write("Send ?");
+
+                if (Console.ReadLine().ToUpperInvariant() == "Y")
+                {
+                    SendRequest(req);
+                }
+
+                Console.Read();
             }
-        }
-
-        private static TransferTarget RandomTarget()
-        {
-            return new TransferTarget { UID = "LOCALHOST 0", To = "127.0.0.1" };
-        }
-
-        private static TransferRequestProtocol ParseProtocol(string protocol)
-        {
-            TransferRequestProtocol res;
-            if (!Enum.TryParse(protocol, true, out res))
+            else if (args.Length == 0)
             {
-                throw new InvalidOperationException("Not recognized protocol: " + protocol);
+                var genReq = OmpRequestGenerationParameters.DummyRequest();
+                File.WriteAllText("genreq.json", JsonConvert.SerializeObject(genReq));
+            }
+            else
+            {
+                throw new ArgumentException("Provide 0-1 args.");
+            }
+        }
+
+        private static TransferRequest GenerateRequest(OmpRequestGenerationParameters genReq)
+        {
+            if (genReq.Randoms <= 0)
+            {
+                return new TransferRequest
+                       {
+                           Payload =
+                               new IncomingRequest
+                               {
+                                   Algorithm = TransferRequestAlgorithm.ClearText, 
+                                   SendRequest = genReq.Message, 
+                                   Trace = new List<string>()
+                               }, 
+                           Protocol = genReq.FinalProtocol, 
+                           ShouldStamp = genReq.ShouldStamp, 
+                           To = genReq.FinalTo
+                       };
             }
 
-            return res;
+            var innerReq = GenerateRequest(genReq.Next());
+            var msg = JsonConvert.SerializeObject(innerReq);
+            var encrypted = Crypto.Encrypt(msg, genReq.Algorithm, genReq.Target);
+
+            var incomingReq = new IncomingRequest
+                              {
+                                  Algorithm = genReq.Algorithm, 
+                                  SendRequest = encrypted, 
+                                  Trace = new List<string>()
+                              };
+
+            return new TransferRequest
+                   {
+                       Payload = incomingReq, 
+                       Protocol = TransferRequestProtocol.Omp, 
+                       ShouldStamp = genReq.ShouldStamp, 
+                       To = genReq.Target.To
+                   };
+        }
+
+        private static void SendRequest(TransferRequest request)
+        {
+            new TransferClient("LOCALHOST -1").Transfer(request);
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TransferController.cs" company="Oswald Maskens">
+// <copyright file="HomeController.cs" company="Oswald Maskens">
 //   Copyright 2014 Oswald Maskens
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -17,23 +17,13 @@
 
 namespace Messenger.Controllers
 {
-    using System.Threading.Tasks;
     using System.Web.Http;
 
-    using Messenger.Models;
-
-    using Newtonsoft.Json;
-
-    public class TransferController : ApiController
+    public class HomeController : ApiController
     {
-        public async Task<string> Post()
+        public string Get()
         {
-            var json = await Request.Content.ReadAsStringAsync();
-
-            var req = JsonConvert.DeserializeObject<IncomingRequest>(json);
-            new TransferClient(Who.AmI).Transfer(req);
-
-            return "ok";
+            return "https://github.com/OzieGamma/Messenger";
         }
     }
 }

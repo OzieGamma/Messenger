@@ -28,7 +28,8 @@ namespace Messenger
             // Web API routes
             config.MapHttpAttributeRoutes();
 
-            config.Routes.MapHttpRoute("api", "{controller}", defaults: new { controller = "who" });
+            //defaults: new { controller = "home" }
+            config.Routes.MapHttpRoute("api", "{controller}");
         }
     }
 }

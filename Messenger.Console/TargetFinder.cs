@@ -1,5 +1,5 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TransferTarget.cs" company="Oswald Maskens">
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="TargetFinder.cs" company="Oswald Maskens">
 //   Copyright 2014 Oswald Maskens
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -17,10 +17,13 @@
 
 namespace Messenger.Console
 {
-    internal class TransferTarget
-    {
-        public string UID { get; set; }
+    using Messenger.Models;
 
-        public string To { get; set; }
+    internal static class TargetFinder
+    {
+        public static TransferTarget Random()
+        {
+            return new TransferTarget { UID = "LOCALHOST 0", To = "http://localhost:64107/transfer" };
+        }
     }
 }
