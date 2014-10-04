@@ -21,6 +21,7 @@ namespace Messenger.Models
     using System.Net;
     using System.Net.Http;
     using System.Net.Mail;
+    using System.Security.Cryptography;
     using System.Text;
 
     using Newtonsoft.Json;
@@ -32,12 +33,14 @@ namespace Messenger.Models
         private readonly string me;
         private readonly string mailName;
         private readonly string mailPass;
+        private readonly RSAParameters privateKey;
 
-        public TransferClient(string me, string mailName, string mailPass)
+        public TransferClient(string me, string mailName, string mailPass, RSAParameters privateKey)
         {
             this.me = me;
             this.mailName = mailName;
             this.mailPass = mailPass;
+            this.privateKey = privateKey;
         }
 
         public void Transfer(IncomingRequest req)
@@ -47,8 +50,8 @@ namespace Messenger.Models
                 case TransferRequestAlgorithm.ClearText:
                     this.TransferClearText(req);
                     break;
-                case TransferRequestAlgorithm.Rsa4096:
-                    this.TransferRsa4096(req);
+                case TransferRequestAlgorithm.Rsa:
+                    this.TransferRsa(req);
                     break;
                 default:
                     throw new NotImplementedException();
@@ -86,9 +89,13 @@ namespace Messenger.Models
             this.Transfer(sendReq);
         }
 
-        private void TransferRsa4096(IncomingRequest req)
+        private void TransferRsa(IncomingRequest req)
         {
-            throw new NotImplementedException();
+            var decrypted = Crypto.Decrypt(req.SendRequest, TransferRequestAlgorithm.Rsa, this.privateKey);
+            var sendReq = JsonConvert.DeserializeObject<TransferRequest>(decrypted);
+            sendReq.Payload.Trace.AddRange(req.Trace);
+
+            this.Transfer(sendReq);
         }
 
         private async void TransferOmp(TransferRequest req)
@@ -96,7 +103,7 @@ namespace Messenger.Models
             var message = JsonConvert.SerializeObject(req.Payload);
 
             var content = new StringContent(message, Encoding.UTF8, "application/json");
-            var res = await new HttpClient().PostAsync(req.To, content);
+            var res = await new HttpClient().PostAsync(req.To + "/transfer", content);
 
             Console.WriteLine(res.StatusCode);
         }
@@ -112,13 +119,12 @@ namespace Messenger.Models
             var email = new SendGridMessage
                         {
                             From =
-                                new MailAddress("noreply@anonymous.com", "Your willing postmaster."),
-                            Subject = "Ping! You got a message !",
+                                new MailAddress("noreply@anonymous.com", "Your willing postmaster."), 
+                            Subject = "Ping! You got a message !", 
                             Text = JsonConvert.SerializeObject(req.Payload)
                         };
 
             email.AddTo(req.To);
-
 
             // Create an Web transport for sending email.
             var transportWeb = new Web(new NetworkCredential(this.mailName, this.mailPass));

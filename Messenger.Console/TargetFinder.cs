@@ -23,7 +23,11 @@ namespace Messenger.Console
     {
         public static TransferTarget Random()
         {
-            return new TransferTarget { UID = "LOCALHOST 0", To = "http://localhost:64107/transfer" };
+#if DEBUG
+            return new TransferTarget { UID = "LOCALHOST 0", To = "http://localhost:64107" };
+#else
+            return new TransferTarget { UID = "JAPAN 1", To = "http://messenger-1.azurewebsites.net" };
+#endif
         }
     }
 }

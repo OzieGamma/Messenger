@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="WebApiConfig.cs" company="Oswald Maskens">
+// <copyright file="KeyController.cs" company="Oswald Maskens">
 //   Copyright 2014 Oswald Maskens
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -15,20 +15,17 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Messenger
+namespace Messenger.Controllers
 {
+    using System.Security.Cryptography;
     using System.Web.Http;
+    using System.Web.Http.Results;
 
-    public static class WebApiConfig
+    public class KeyController : ApiController
     {
-        public static void Register(HttpConfiguration config)
+        public JsonResult<RSAParameters> Get()
         {
-            // Web API configuration and services
-
-            // Web API routes
-            config.MapHttpAttributeRoutes();
-
-            config.Routes.MapHttpRoute("api", "{controller}", defaults: new { controller = "home" });
+            return this.Json(My.Keys.Public);
         }
     }
 }

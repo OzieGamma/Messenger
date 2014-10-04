@@ -20,6 +20,6 @@ namespace Messenger.Models
     public enum TransferRequestAlgorithm
     {
         ClearText,
-        Rsa4096
+        Rsa
     }
 }

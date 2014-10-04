@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="WebApiConfig.cs" company="Oswald Maskens">
+// <copyright file="RsaKeys.cs" company="Oswald Maskens">
 //   Copyright 2014 Oswald Maskens
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -15,20 +15,35 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Messenger
+namespace Messenger.Models
 {
-    using System.Web.Http;
+    using System.Security.Cryptography;
 
-    public static class WebApiConfig
+    public class RsaKeys
     {
-        public static void Register(HttpConfiguration config)
+        private readonly RSAParameters privateKey;
+        private readonly RSAParameters publicKey;
+
+        public RsaKeys(RSAParameters privateKey, RSAParameters publicKey)
         {
-            // Web API configuration and services
+            this.privateKey = privateKey;
+            this.publicKey = publicKey;
+        }
 
-            // Web API routes
-            config.MapHttpAttributeRoutes();
+        public RSAParameters Public
+        {
+            get
+            {
+                return this.publicKey;
+            }
+        }
 
-            config.Routes.MapHttpRoute("api", "{controller}", defaults: new { controller = "home" });
+        public RSAParameters Private
+        {
+            get
+            {
+                return this.privateKey;
+            }
         }
     }
 }

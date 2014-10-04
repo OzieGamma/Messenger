@@ -20,6 +20,7 @@ namespace Messenger.Console
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Security.Cryptography;
 
     using Messenger.Models;
 
@@ -102,7 +103,7 @@ namespace Messenger.Console
 
         private static void SendRequest(TransferRequest request)
         {
-            new TransferClient("LOCALHOST -1", null, null).Transfer(request);
+            new TransferClient("LOCALHOST -1", null, null, default(RSAParameters)).Transfer(request);
         }
     }
 }

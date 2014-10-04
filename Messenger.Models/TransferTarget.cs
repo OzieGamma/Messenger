@@ -1,4 +1,4 @@
- // --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="TransferTarget.cs" company="Oswald Maskens">
 //   Copyright 2014 Oswald Maskens
 //   Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,10 +17,32 @@
 
 namespace Messenger.Models
 {
+    using System.Net.Http;
+    using System.Security.Cryptography;
+
+    using Newtonsoft.Json;
+
     public class TransferTarget
     {
+        private RSAParameters? publicKey;
+
         public string UID { get; set; }
 
         public string To { get; set; }
+
+        public RSAParameters PublicKey
+        {
+            get
+            {
+                if (this.publicKey == null)
+                {
+                    this.publicKey =
+                        JsonConvert.DeserializeObject<RSAParameters>(
+                            new HttpClient().GetAsync(this.To + "/key").Result.Content.ReadAsStringAsync().Result);
+                }
+
+                return this.publicKey.GetValueOrDefault();
+            }
+        }
     }
 }
