@@ -19,6 +19,8 @@ namespace Messenger.Controllers
 {
     using System.Web.Http;
 
+    using Messenger.Models;
+
     public class WhoController : ApiController
     {
         public string Get()

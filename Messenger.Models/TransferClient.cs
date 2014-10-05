@@ -31,17 +31,6 @@ namespace Messenger.Models
     {
         public const double ExitChance = 0.10;
 
-        private readonly string me;
-        private readonly string mailName;
-        private readonly string mailPass;
-
-        public TransferClient(string me, string mailName, string mailPass)
-        {
-            this.me = me;
-            this.mailName = mailName;
-            this.mailPass = mailPass;
-        }
-
         public void Transfer(TransferRequest req)
         {
             if (req.ShouldStamp)
@@ -87,7 +76,7 @@ namespace Messenger.Models
 
         private string MakeStamp()
         {
-            return string.Format("Transfered by {0} @ {1} {2}", this.me, DateTime.Now, Environment.NewLine);
+            return string.Format("Transfered by {0} @ {1}", My.Name, DateTime.Now);
         }
 
         private void TransferEmail(TransferRequest req)
@@ -104,7 +93,7 @@ namespace Messenger.Models
             email.AddTo(req.FinalTo);
 
             // Create an Web transport for sending email.
-            var transportWeb = new Web(new NetworkCredential(this.mailName, this.mailPass));
+            var transportWeb = new Web(new NetworkCredential(My.SendGridUsername, My.SendGridPassword));
 
             // Send the email.
             transportWeb.DeliverAsync(email);

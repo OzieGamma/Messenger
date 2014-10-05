@@ -15,36 +15,16 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Messenger
+namespace Messenger.Models
 {
-    using System.Configuration;
-
-    using Messenger.Models;
-
-    internal static class My
+    public static class My
     {
-        internal static string Name
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings["UID"];
-            }
-        }
+        public static string Name { get; set; }
 
-        internal static string SendGridUsername
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings["Sendgrid_username"];
-            }
-        }
+        public static string Url { get; set; }
 
-        internal static string SendGridPassword
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings["Sendgrid_pwd"];
-            }
-        }
+        public static string SendGridUsername { get; set; }
+
+        public static string SendGridPassword { get; set; }
     }
 }

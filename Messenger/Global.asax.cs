@@ -17,13 +17,22 @@
 
 namespace Messenger
 {
+    using System.Configuration;
     using System.Web;
     using System.Web.Http;
+
+    using Messenger.Models;
 
     public class WebApiApplication : HttpApplication
     {
         protected void Application_Start()
         {
+            My.Name = ConfigurationManager.AppSettings["UID"];
+            My.Url = ConfigurationManager.AppSettings["Url"];
+
+            My.SendGridUsername = ConfigurationManager.AppSettings["Sendgrid_username"];
+            My.SendGridPassword = ConfigurationManager.AppSettings["Sendgrid_pwd"];
+
             GlobalConfiguration.Configure(WebApiConfig.Register);
         }
     }

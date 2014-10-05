@@ -19,18 +19,18 @@ namespace Messenger.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
-
-    using Newtonsoft.Json;
+    using System.Linq;
 
     internal static class TargetFinder
     {
-        private static readonly List<string> Targets = new List<string>
-                                                               {
-                                                                   "http://messenger-1.azurewebsites.net"
-                                                               };
+        private static readonly List<string> Targets;
 
         private static readonly Random Rand = new Random();
+
+        static TargetFinder()
+        {
+            Targets = new List<string> { "http://messenger-1.azurewebsites.net" }.Where(_ => _ != My.Url).ToList();
+        }
 
         public static string Random()
         {

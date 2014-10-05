@@ -21,16 +21,16 @@ namespace Messenger.Models
 
     internal static class MyRandom
     {
-        private static readonly Random rand = new Random();
+        private static readonly Random Rand = new Random();
 
         public static bool Try(double d)
         {
-            return rand.NextDouble() <= d;
+            return Rand.NextDouble() <= d;
         }
 
         public static int RedPill()
         {
-            return rand.Next(5, 500);
+            return Rand.Next(1, 1);
         }
     }
 }

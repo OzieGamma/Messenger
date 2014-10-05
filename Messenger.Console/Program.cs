@@ -18,7 +18,6 @@
 namespace Messenger.Console
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
 
     using Messenger.Models;
@@ -29,6 +28,8 @@ namespace Messenger.Console
     {
         private static void Main(string[] args)
         {
+            DefineMy();
+
             if (args.Length == 1)
             {
                 if (!File.Exists(args[0]))
@@ -55,9 +56,17 @@ namespace Messenger.Console
             }
         }
 
+        private static void DefineMy()
+        {
+            My.Name = "LOCAL";
+            My.SendGridPassword = string.Empty;
+            My.SendGridUsername = string.Empty;
+            My.Url = "http://localhost";
+        }
+
         private static void SendRequest(TransferRequest request)
         {
-            new TransferClient("LOCALHOST -1", null, null).Transfer(request);
+            new TransferClient().Transfer(request);
         }
     }
 }

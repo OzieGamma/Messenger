@@ -30,7 +30,7 @@ namespace Messenger.Controllers
             var json = await Request.Content.ReadAsStringAsync();
 
             var req = JsonConvert.DeserializeObject<TransferRequest>(json);
-            new TransferClient(My.Name, My.SendGridUsername, My.SendGridPassword).Transfer(req);
+            new TransferClient().Transfer(req);
         }
     }
 }
