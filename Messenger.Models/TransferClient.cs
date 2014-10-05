@@ -107,7 +107,10 @@ namespace Messenger.Models
 
         private void TransferSms(TransferRequest req)
         {
-            throw new NotImplementedException(req.ToString());
+            var client = new TwilioRestClient(My.TwilioSid, My.TwilioAuthToken);
+
+            // Send an SMS message.
+            client.SendSmsMessage(My.TwilioPhoneNumber, req.FinalTo, req.Payload);
         }
 
         private void TransferCall(TransferRequest req)
