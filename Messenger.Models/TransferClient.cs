@@ -22,10 +22,9 @@ namespace Messenger.Models
     using System.Net.Http;
     using System.Net.Mail;
     using System.Text;
+    using System.Web;
 
     using Newtonsoft.Json;
-
-    using RestSharp.Contrib;
 
     using SendGrid;
 
@@ -114,7 +113,9 @@ namespace Messenger.Models
         private void TransferCall(TransferRequest req)
         {
             var client = new TwilioRestClient(My.TwilioSid, My.TwilioAuthToken);
-            var url = string.Format("http://twimlets.com/message?Message%5B0%5D={0}", HttpUtility.UrlEncode(req.Payload));
+            var url = string.Format(
+                "http://twimlets.com/message?Message%5B0%5D={0}", 
+                HttpUtility.UrlEncode(req.Payload));
 
             var options = new CallOptions { From = My.TwilioPhoneNumber, To = req.FinalTo, Url = url };
             client.InitiateOutboundCall(options);
