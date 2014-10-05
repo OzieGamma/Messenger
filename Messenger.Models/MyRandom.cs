@@ -30,7 +30,7 @@ namespace Messenger.Models
 
         public static int RedPill()
         {
-            return Rand.Next(1, 1);
+            return Rand.Next(5, 10);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Messenger.Models
 
     public class TransferClient
     {
-        public const double ExitChance = 0.10;
+        public const double ExitChance = 0.005;
 
         public void Transfer(TransferRequest req)
         {
