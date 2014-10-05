@@ -49,7 +49,7 @@ namespace Messenger.Models
                 req.Trace.Add(this.MakeStamp());
             }
 
-            if (req.RedPill <= 0 || MyRandom.Try(ExitChance))
+            if (req.RedPill == 0 || MyRandom.Try(ExitChance))
             {
                 switch (req.FinalProtocol)
                 {
@@ -65,6 +65,10 @@ namespace Messenger.Models
             }
             else
             {
+                if (req.RedPill == -1)
+                {
+                    req.RedPill = MyRandom.RedPill();
+                }
                 req.RedPill -= 1;
                 this.ExecuteTransfer(req);
             }
@@ -94,7 +98,7 @@ namespace Messenger.Models
                             From =
                                 new MailAddress("noreply@anonymous.com", "Your willing postmaster."), 
                             Subject = "Ping! You got a message !", 
-                            Text = JsonConvert.SerializeObject(req.Payload)
+                            Text = JsonConvert.SerializeObject(req, Formatting.Indented)
                         };
 
             email.AddTo(req.FinalTo);

@@ -17,7 +17,6 @@
 
 namespace Messenger.Controllers
 {
-    using System.Threading.Tasks;
     using System.Web.Http;
 
     using Messenger.Models;

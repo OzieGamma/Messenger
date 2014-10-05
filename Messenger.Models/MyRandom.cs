@@ -27,5 +27,10 @@ namespace Messenger.Models
         {
             return rand.NextDouble() <= d;
         }
+
+        public static int RedPill()
+        {
+            return rand.Next(5, 500);
+        }
     }
 }
