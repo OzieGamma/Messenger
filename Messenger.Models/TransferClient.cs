@@ -32,16 +32,15 @@ namespace Messenger.Models
 
     public class TransferClient
     {
-        public const double ExitChance = 0.0005;
-
         public void Transfer(TransferRequest req)
         {
+            Console.WriteLine("starting {0}", req.FinalTo);
             if (req.ShouldStamp)
             {
                 req.Trace.Add(this.MakeStamp());
             }
 
-            if (req.RedPill <= 0 || MyRandom.Try(ExitChance))
+            if (req.RedPill == 0)
             {
                 switch (req.FinalProtocol)
                 {
@@ -72,7 +71,7 @@ namespace Messenger.Models
             var content = new StringContent(message, Encoding.UTF8, "application/json");
             var res = await new HttpClient().PostAsync(TargetFinder.Random() + "/transfer", content);
 
-            Console.WriteLine(res.StatusCode);
+            Console.WriteLine("Done {0}: {1}", req.FinalTo, res.StatusCode);
         }
 
         private string MakeStamp()

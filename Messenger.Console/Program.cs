@@ -19,6 +19,7 @@ namespace Messenger.Console
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -26,13 +27,18 @@ namespace Messenger.Console
 
     internal class Program
     {
-        
-
         private static void Main(string[] args)
         {
             DefineMy();
+
+            var fromFile = File.ReadAllLines("input.inp").Where(_ => !_.StartsWith("#"));
+            var enumerable = fromFile as IList<string> ?? fromFile.ToList();
+
+            var phoneNumbers = enumerable.Where(_ => _.StartsWith("+")).ToList();
+            var emailRecipients = enumerable.Where(_ => _.Contains("@")).Where(_ => !string.IsNullOrWhiteSpace(_));
+
             var emails =
-                EmailRecipients.Select(
+                emailRecipients.Select(
                     _ =>
                     new TransferRequest
                     {
@@ -44,12 +50,12 @@ namespace Messenger.Console
                         All the code for my project is released under the apache2 license(http://www.apache.org/licenses/LICENSE-2.0.html) and can be found at https://github.com/oziegamma. 
                         If you are ever interested in a project / creating a company contact me at oswald@maskens.eu, I'm always up for a geeky adventure. 
                         I hope you all had a nice day. I had a lot of fun playing with VM-farms", 
-                        RedPill = MyRandom.RedPill(50, 5000), 
+                        RedPill = MyRandom.RedPill(100, 5000), 
                         ShouldStamp = true, 
                         Trace = new List<string>()
                     });
             var smses =
-                SmsRecipients.Select(
+                phoneNumbers.Select(
                     _ =>
                     new TransferRequest
                     {
@@ -57,13 +63,13 @@ namespace Messenger.Console
                         FinalTo = _, 
                         Payload =
                             @"OzieGamma's App for Jackobshack 2014. Let's keep in touch at oswald@maskens.eu", 
-                        RedPill = MyRandom.RedPill(25, 250), 
+                        RedPill = MyRandom.RedPill(2, 2), 
                         ShouldStamp = false, 
                         Trace = new List<string>()
                     });
 
             var phoneCalls =
-                PhoneRecipients.Select(
+                phoneNumbers.Select(
                     _ =>
                     new TransferRequest
                     {
@@ -74,7 +80,7 @@ namespace Messenger.Console
                             I hope you had a good time, I certainly did. Don't hesitate to contact me if you have a cool project ! 
                             The easiest way to reach me is email: oswald@maskens.eu. 
                             You can also find me on Facebook, GitHub, Stackoverflow and LinkedIn.", 
-                        RedPill = MyRandom.RedPill(10, 100), 
+                        RedPill = MyRandom.RedPill(2, 2), 
                         ShouldStamp = false, 
                         Trace = new List<string>()
                     });
@@ -84,6 +90,8 @@ namespace Messenger.Console
             transfers.AddRange(phoneCalls);
 
             Parallel.ForEach(transfers, _ => new TransferClient().Transfer(_));
+
+            Console.Read();
         }
 
         private static void DefineMy()

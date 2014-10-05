@@ -23,11 +23,6 @@ namespace Messenger.Models
     {
         private static readonly Random Rand = new Random();
 
-        public static bool Try(double d)
-        {
-            return d <= Rand.Next();
-        }
-
         public static int RedPill(int min, int max)
         {
             return Rand.Next(min, max);
