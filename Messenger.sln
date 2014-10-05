@@ -9,6 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger.Console", "Messen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messenger.Models", "Messenger.Models\Messenger.Models.csproj", "{A33731AA-7F8E-44D5-BDFB-6BD114982913}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{100D57C5-4B0A-402D-BEB8-24DC3774327B}"
+	ProjectSection(SolutionItems) = preProject
+		Create-Network.ps1 = Create-Network.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
