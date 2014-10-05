@@ -23,7 +23,7 @@ namespace Messenger.Controllers
     {
         public int Get()
         {
-            return 2;
+            return 7;
         }
     }
 }

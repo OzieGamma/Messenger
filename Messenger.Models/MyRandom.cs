@@ -19,18 +19,18 @@ namespace Messenger.Models
 {
     using System;
 
-    internal static class MyRandom
+    public static class MyRandom
     {
         private static readonly Random Rand = new Random();
 
         public static bool Try(double d)
         {
-            return Rand.NextDouble() <= d;
+            return d <= Rand.Next();
         }
 
-        public static int RedPill()
+        public static int RedPill(int min, int max)
         {
-            return Rand.Next(5, 10);
+            return Rand.Next(min, max);
         }
     }
 }

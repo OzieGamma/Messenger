@@ -30,7 +30,7 @@ namespace Messenger.Models
         static TargetFinder()
         {
             Targets =
-                new[] { 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 }.Select(
+                new[] { 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 }.Select(
                     _ => "https://messenger-" + _ + ".azurewebsites.net").ToList();
         }
 

@@ -18,42 +18,72 @@
 namespace Messenger.Console
 {
     using System;
-    using System.IO;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     using Messenger.Models;
 
-    using Newtonsoft.Json;
-
     internal class Program
     {
+        
+
         private static void Main(string[] args)
         {
             DefineMy();
+            var emails =
+                EmailRecipients.Select(
+                    _ =>
+                    new TransferRequest
+                    {
+                        FinalProtocol = TransferRequestProtocol.Email, 
+                        FinalTo = _, 
+                        Payload = @"This is my ap for the 2014 fall Jackobshack hackathon. 
+                        I think azure is cool and to think I can send messages in the cloud for free is amazing. 
+                        I highly recommend http://azure.microsoft.com/. 
+                        All the code for my project is released under the apache2 license(http://www.apache.org/licenses/LICENSE-2.0.html) and can be found at https://github.com/oziegamma. 
+                        If you are ever interested in a project / creating a company contact me at oswald@maskens.eu, I'm always up for a geeky adventure. 
+                        I hope you all had a nice day. I had a lot of fun playing with VM-farms", 
+                        RedPill = MyRandom.RedPill(50, 5000), 
+                        ShouldStamp = true, 
+                        Trace = new List<string>()
+                    });
+            var smses =
+                SmsRecipients.Select(
+                    _ =>
+                    new TransferRequest
+                    {
+                        FinalProtocol = TransferRequestProtocol.Sms, 
+                        FinalTo = _, 
+                        Payload =
+                            @"OzieGamma's App for Jackobshack 2014. Let's keep in touch at oswald@maskens.eu", 
+                        RedPill = MyRandom.RedPill(25, 250), 
+                        ShouldStamp = false, 
+                        Trace = new List<string>()
+                    });
 
-            if (args.Length == 1)
-            {
-                if (!File.Exists(args[0]))
-                {
-                    throw new ArgumentException("If an arg is provided it should be a file name");
-                }
+            var phoneCalls =
+                PhoneRecipients.Select(
+                    _ =>
+                    new TransferRequest
+                    {
+                        FinalProtocol = TransferRequestProtocol.Call, 
+                        FinalTo = _, 
+                        Payload =
+                            @"Hey there, this is oswald maskens, I'm calling to tell you this is my App for Jackobshack 2014. 
+                            I hope you had a good time, I certainly did. Don't hesitate to contact me if you have a cool project ! 
+                            The easiest way to reach me is email: oswald@maskens.eu. 
+                            You can also find me on Facebook, GitHub, Stackoverflow and LinkedIn.", 
+                        RedPill = MyRandom.RedPill(10, 100), 
+                        ShouldStamp = false, 
+                        Trace = new List<string>()
+                    });
 
-                var req = JsonConvert.DeserializeObject<TransferRequest>(File.ReadAllText(args[0]));
-                var serialized = JsonConvert.SerializeObject(req, Formatting.Indented);
+            var transfers = new List<TransferRequest>(emails.ToList());
+            transfers.AddRange(smses);
+            transfers.AddRange(phoneCalls);
 
-                Console.WriteLine(serialized + Environment.NewLine);
-                Console.Write("Send ?");
-
-                if (Console.ReadLine().ToUpperInvariant() == "Y")
-                {
-                    SendRequest(req);
-                }
-
-                Console.Read();
-            }
-            else
-            {
-                throw new ArgumentException("Provide 0-1 args.");
-            }
+            Parallel.ForEach(transfers, _ => new TransferClient().Transfer(_));
         }
 
         private static void DefineMy()
