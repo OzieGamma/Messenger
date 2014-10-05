@@ -56,6 +56,7 @@
     <None Include="packages.config" />
     <None Include="genreq.json" />
     <None Include="req.json" />
+    <None Include="targets.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Messenger.Models\Messenger.Models.csproj">

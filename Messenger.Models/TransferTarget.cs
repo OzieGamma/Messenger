@@ -26,10 +26,10 @@ namespace Messenger.Models
     {
         private RSAParameters? publicKey;
 
-        public string UID { get; set; }
-
+        [JsonProperty("to")]
         public string To { get; set; }
 
+        [JsonIgnore]
         public RSAParameters PublicKey
         {
             get

@@ -39,9 +39,11 @@ namespace Messenger.Console
 
                 var genReq = JsonConvert.DeserializeObject<OmpRequestGenerationParameters>(File.ReadAllText(args[0]));
                 var req = GenerateRequest(genReq);
+                var serialized = JsonConvert.SerializeObject(req, Formatting.Indented);
 
-                File.WriteAllText("req.json", JsonConvert.SerializeObject(req));
+                File.WriteAllText("req.json", serialized);
 
+                Console.WriteLine(serialized +  Environment.NewLine);
                 Console.Write("Send ?");
 
                 if (Console.ReadLine().ToUpperInvariant() == "Y")

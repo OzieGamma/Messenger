@@ -17,16 +17,27 @@
 
 namespace Messenger.Console
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+
     using Messenger.Models;
+
+    using Newtonsoft.Json;
 
     internal static class TargetFinder
     {
+        private static readonly List<TransferTarget> Targets =
+            JsonConvert.DeserializeObject<List<TransferTarget>>(File.ReadAllText("targets.json"));
+
+        private static readonly Random Rand = new Random();
+
         public static TransferTarget Random()
         {
 #if DEBUG
-            return new TransferTarget { UID = "LOCALHOST 0", To = "http://localhost:64107" };
+            return new TransferTarget { To = "http://localhost:64107" };
 #else
-            return new TransferTarget { UID = "JAPAN 1", To = "http://messenger-1.azurewebsites.net" };
+            return Targets[Rand.Next(0, Targets.Count)];
 #endif
         }
     }
