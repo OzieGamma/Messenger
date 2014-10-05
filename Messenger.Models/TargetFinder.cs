@@ -29,7 +29,11 @@ namespace Messenger.Models
 
         static TargetFinder()
         {
-            Targets = new List<string> { "http://messenger-1.azurewebsites.net" }.Where(_ => _ != My.Url).ToList();
+            Targets =
+                (new int[2]).Select((_, i) => i)
+                            .Select(_ => "https://messenger-" + _ + ".azurewebsites.net")
+                            .Where(_ => _ != My.Url)
+                            .ToList();
         }
 
         public static string Random()
