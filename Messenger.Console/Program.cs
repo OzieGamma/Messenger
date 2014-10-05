@@ -59,9 +59,14 @@ namespace Messenger.Console
         private static void DefineMy()
         {
             My.Name = "LOCAL";
+            My.Url = "http://localhost";
+
             My.SendGridPassword = string.Empty;
             My.SendGridUsername = string.Empty;
-            My.Url = "http://localhost";
+
+            My.TwilioSid = string.Empty;
+            My.TwilioAuthToken = string.Empty;
+            My.TwilioPhoneNumber = string.Empty;
         }
 
         private static void SendRequest(TransferRequest request)

@@ -33,6 +33,10 @@ namespace Messenger
             My.SendGridUsername = ConfigurationManager.AppSettings["Sendgrid_username"];
             My.SendGridPassword = ConfigurationManager.AppSettings["Sendgrid_pwd"];
 
+            My.TwilioSid = ConfigurationManager.AppSettings["Twilio_sid"];
+            My.TwilioAuthToken = ConfigurationManager.AppSettings["Twilio_auth_token"];
+            My.TwilioPhoneNumber = ConfigurationManager.AppSettings["Twilio_phonenumber"];
+
             GlobalConfiguration.Configure(WebApiConfig.Register);
         }
     }

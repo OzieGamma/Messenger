@@ -25,7 +25,11 @@ namespace Messenger.Models
 
     using Newtonsoft.Json;
 
+    using RestSharp.Contrib;
+
     using SendGrid;
+
+    using Twilio;
 
     public class TransferClient
     {
@@ -48,6 +52,9 @@ namespace Messenger.Models
                     case TransferRequestProtocol.Sms:
                         this.TransferSms(req);
                         break;
+                    case TransferRequestProtocol.Call:
+                        this.TransferCall(req);
+                        break;
                     default:
                         throw new NotImplementedException();
                 }
@@ -58,11 +65,11 @@ namespace Messenger.Models
                 {
                     req.RedPill = MyRandom.RedPill();
                 }
+
                 req.RedPill -= 1;
                 this.ExecuteTransfer(req);
             }
         }
-
 
         private async void ExecuteTransfer(TransferRequest req)
         {
@@ -102,6 +109,15 @@ namespace Messenger.Models
         private void TransferSms(TransferRequest req)
         {
             throw new NotImplementedException(req.ToString());
+        }
+
+        private void TransferCall(TransferRequest req)
+        {
+            var client = new TwilioRestClient(My.TwilioSid, My.TwilioAuthToken);
+            var url = string.Format("http://twimlets.com/message?Message%5B0%5D={0}", HttpUtility.UrlEncode(req.Payload));
+
+            var options = new CallOptions { From = My.TwilioPhoneNumber, To = req.FinalTo, Url = url };
+            client.InitiateOutboundCall(options);
         }
     }
 }

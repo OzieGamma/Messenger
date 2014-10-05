@@ -20,6 +20,7 @@ namespace Messenger.Models
     public enum TransferRequestProtocol
     {
         Email,
-        Sms
+        Sms,
+        Call
     }
 }

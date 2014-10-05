@@ -26,5 +26,11 @@ namespace Messenger.Models
         public static string SendGridUsername { get; set; }
 
         public static string SendGridPassword { get; set; }
+
+        public static string TwilioSid { get; set; }
+
+        public static string TwilioAuthToken { get; set; }
+
+        public static string TwilioPhoneNumber { get; set; }
     }
 }
