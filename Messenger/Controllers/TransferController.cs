@@ -26,14 +26,12 @@ namespace Messenger.Controllers
 
     public class TransferController : ApiController
     {
-        public async Task<string> Post()
+        public async void Post()
         {
             var json = await Request.Content.ReadAsStringAsync();
 
             var req = JsonConvert.DeserializeObject<TransferRequest>(json);
             new TransferClient(My.Name, My.SendGridUsername, My.SendGridPassword).Transfer(req);
-
-            return "ok";
         }
     }
 }
