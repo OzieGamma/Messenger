@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TargetFinder.cs" company="Oswald Maskens">
+// <copyright file="HomeController.cs" company="Oswald Maskens">
 //   Copyright 2014 Oswald Maskens
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -15,32 +15,15 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Messenger.Models
+namespace Messenger.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    using System.Web.Http;
 
-    internal static class TargetFinder
+    public class VersionController : ApiController
     {
-        private static readonly IList<string> Targets;
-
-        private static readonly Random Rand = new Random();
-
-        static TargetFinder()
+        public int Get()
         {
-            Targets =
-                new[] { 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 }.Select(
-                    _ => "https://messenger-" + _ + ".azurewebsites.net").ToList();
-        }
-
-        public static string Random()
-        {
-#if DEBUG
-            return "http://localhost:64107";
-#else
-            return Targets[Rand.Next(0, Targets.Count)];
-#endif
+            return 2;
         }
     }
 }
