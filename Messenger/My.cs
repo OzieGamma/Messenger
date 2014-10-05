@@ -23,8 +23,6 @@ namespace Messenger
 
     internal static class My
     {
-        private static RsaKeys keys;
-
         internal static string Name
         {
             get
@@ -46,14 +44,6 @@ namespace Messenger
             get
             {
                 return ConfigurationManager.AppSettings["Sendgrid_pwd"];
-            }
-        }
-
-        internal static RsaKeys Keys
-        {
-            get
-            {
-                return keys ?? (keys = Crypto.CreateKeys());
             }
         }
     }

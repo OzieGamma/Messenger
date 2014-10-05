@@ -17,6 +17,8 @@
 
 namespace Messenger.Models
 {
+    using System.Collections.Generic;
+
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
 
@@ -25,14 +27,20 @@ namespace Messenger.Models
         [JsonProperty("should_stamp")]
         public bool ShouldStamp { get; set; }
 
-        [JsonProperty("protocol")]
+        [JsonProperty("final_protocol")]
         [JsonConverter(typeof(StringEnumConverter))]
-        public TransferRequestProtocol Protocol { get; set; }
+        public TransferRequestProtocol FinalProtocol { get; set; }
 
-        [JsonProperty("to")]
-        public string To { get; set; }
+        [JsonProperty("final_to")]
+        public string FinalTo { get; set; }
 
         [JsonProperty("payload")]
-        public IncomingRequest Payload { get; set; }
+        public string Payload { get; set; }
+
+        [JsonProperty("trace")]
+        public List<string> Trace { get; set; }
+
+        [JsonProperty("red_pill")]
+        public int RedPill { get; set; }
     }
 }

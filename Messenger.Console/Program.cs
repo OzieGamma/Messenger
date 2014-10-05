@@ -20,7 +20,6 @@ namespace Messenger.Console
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Security.Cryptography;
 
     using Messenger.Models;
 
@@ -37,13 +36,10 @@ namespace Messenger.Console
                     throw new ArgumentException("If an arg is provided it should be a file name");
                 }
 
-                var genReq = JsonConvert.DeserializeObject<OmpRequestGenerationParameters>(File.ReadAllText(args[0]));
-                var req = GenerateRequest(genReq);
+                var req = JsonConvert.DeserializeObject<TransferRequest>(File.ReadAllText(args[0]));
                 var serialized = JsonConvert.SerializeObject(req, Formatting.Indented);
 
-                File.WriteAllText("req.json", serialized);
-
-                Console.WriteLine(serialized +  Environment.NewLine);
+                Console.WriteLine(serialized + Environment.NewLine);
                 Console.Write("Send ?");
 
                 if (Console.ReadLine().ToUpperInvariant() == "Y")
@@ -53,59 +49,15 @@ namespace Messenger.Console
 
                 Console.Read();
             }
-            else if (args.Length == 0)
-            {
-                var genReq = OmpRequestGenerationParameters.DummyRequest();
-                File.WriteAllText("genreq.json", JsonConvert.SerializeObject(genReq));
-            }
             else
             {
                 throw new ArgumentException("Provide 0-1 args.");
             }
         }
 
-        private static TransferRequest GenerateRequest(OmpRequestGenerationParameters genReq)
-        {
-            if (genReq.Randoms <= 0)
-            {
-                return new TransferRequest
-                       {
-                           Payload =
-                               new IncomingRequest
-                               {
-                                   Algorithm = TransferRequestAlgorithm.ClearText, 
-                                   SendRequest = genReq.Message, 
-                                   Trace = new List<string>()
-                               }, 
-                           Protocol = genReq.FinalProtocol, 
-                           ShouldStamp = genReq.ShouldStamp, 
-                           To = genReq.FinalTo
-                       };
-            }
-
-            var innerReq = GenerateRequest(genReq.Next());
-            var msg = JsonConvert.SerializeObject(innerReq);
-            var encrypted = Crypto.Encrypt(msg, genReq.Algorithm, genReq.Target);
-
-            var incomingReq = new IncomingRequest
-                              {
-                                  Algorithm = genReq.Algorithm, 
-                                  SendRequest = encrypted, 
-                                  Trace = new List<string>()
-                              };
-
-            return new TransferRequest
-                   {
-                       Payload = incomingReq, 
-                       Protocol = TransferRequestProtocol.Omp, 
-                       ShouldStamp = genReq.ShouldStamp, 
-                       To = genReq.Target.To
-                   };
-        }
-
         private static void SendRequest(TransferRequest request)
         {
-            new TransferClient("LOCALHOST -1", null, null, default(RSAParameters)).Transfer(request);
+            new TransferClient("LOCALHOST -1", null, null).Transfer(request);
         }
     }
 }

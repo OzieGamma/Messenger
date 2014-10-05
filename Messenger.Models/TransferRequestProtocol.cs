@@ -19,7 +19,6 @@ namespace Messenger.Models
 {
     public enum TransferRequestProtocol
     {
-        Omp, 
         Email,
         Sms
     }
